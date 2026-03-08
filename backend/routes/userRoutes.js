@@ -3,6 +3,7 @@ const router = express.Router();
 
 const User = require("../models/user");
 const authMiddleware = require("../middleware/authMiddleware");
+const Playlist = require("../models/playlist");
 
 router.post("/follow", authMiddleware, async (req, res) => {
 
@@ -92,18 +93,18 @@ router.get("/followers/:id", async (req, res) => {
 
 });
 
-router.get("/followers/:id", async (req, res) => {
+router.get("/following/:id", async (req, res) => {
 
   try {
 
     const user = await User.findById(req.params.id)
-      .populate("followers", "username");
+      .populate("following", "username");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user.followers);
+    res.json(user.following);
 
   } catch (error) {
 
@@ -111,6 +112,41 @@ router.get("/followers/:id", async (req, res) => {
 
   }
 
+});
+
+router.get("/:id", async (req, res) => {
+
+  try {
+
+    const user = await User.findById(req.params.id)
+      .select("-password")
+      .populate("followers", "username")
+      .populate("following", "username");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+
+  } catch (error) {
+
+    res.status(500).json({ error: error.message });
+
+  }
+
+});
+
+
+router.get("/:id/playlists", async (req, res) => {
+  try {
+    const playlists = await Playlist.find({ user: req.params.id });
+
+    res.json(playlists);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Playlist = require("../models/Playlist");
+const Playlist = require("../models/playlist");
 const authMiddleware = require("../middleware/authMiddleware");
 
 router.post("/create", authMiddleware, async (req, res) => {
