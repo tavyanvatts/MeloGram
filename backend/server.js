@@ -5,10 +5,12 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 const playlistRoutes = require("./routes/playlistRoutes");
+const userRoutes = require("./routes/userRoutes");
 const app = express();
 
 app.use(express.json());
 app.use("/api/playlists", playlistRoutes);
+app.use("/api/users", userRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
