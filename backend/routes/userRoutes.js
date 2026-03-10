@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const User = require("../models/user");
+const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
 const Playlist = require("../models/playlist");
+const Activity = require("../models/activity");
 
 router.post("/follow", authMiddleware, async (req, res) => {
 
@@ -27,6 +28,14 @@ router.post("/follow", authMiddleware, async (req, res) => {
 
     await currentUser.save();
     await userToFollow.save();
+
+    const activity = new Activity({
+  user: currentUser._id,
+  type: "follow",
+  message: `${currentUser.username} followed ${userToFollow.username}`
+});
+
+await activity.save();
 
     res.json({ message: "User followed successfully" });
 

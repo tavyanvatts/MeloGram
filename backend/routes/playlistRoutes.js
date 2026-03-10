@@ -3,6 +3,8 @@ const router = express.Router();
 
 const Playlist = require("../models/playlist");
 const authMiddleware = require("../middleware/authMiddleware");
+const Activity = require("../models/activity");
+const User = require("../models/User");
 
 router.post("/create", authMiddleware, async (req, res) => {
 
@@ -17,6 +19,19 @@ router.post("/create", authMiddleware, async (req, res) => {
     });
 
     await playlist.save();
+
+    const Activity = require("../models/activity");
+const User = require("../models/User");
+
+const user = await User.findById(req.user.id);
+
+const activity = new Activity({
+  user: user._id,
+  type: "playlist_create",
+  message: `${user.username} created playlist ${name}`
+});
+
+await activity.save();
 
     res.json({
       message: "Playlist created",
