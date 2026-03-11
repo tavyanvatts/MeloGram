@@ -123,6 +123,22 @@ router.get("/following/:id", async (req, res) => {
 
 });
 
+router.get("/search", async (req, res) => {
+  try {
+
+    const { username } = req.query;
+
+    const users = await User.find({
+      username: { $regex: username, $options: "i" }
+    }).select("username");
+
+    res.json(users);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/:id", async (req, res) => {
 
   try {

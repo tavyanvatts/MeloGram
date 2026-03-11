@@ -7,12 +7,14 @@ const authMiddleware = require("./middleware/authMiddleware");
 const playlistRoutes = require("./routes/playlistRoutes");
 const userRoutes = require("./routes/userRoutes");
 const feedRoutes = require("./routes/feedRoutes");
+const songRoutes = require("./routes/songRoutes");
 const app = express();
 
 app.use(express.json());
 app.use("/api/playlists", playlistRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/feed", feedRoutes);
+app.use("/api/songs", songRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
